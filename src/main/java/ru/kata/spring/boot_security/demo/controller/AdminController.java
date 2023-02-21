@@ -26,10 +26,9 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String getAllUsers(Model model) {
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
+        model.addAttribute("users", userService.getAllUsers());
         return "allUsers";
     }
     @GetMapping("/{id}")
@@ -47,27 +46,34 @@ public class AdminController {
 
     @GetMapping(value = "/edit/{id}")
     public String editUser(@PathVariable("id") int id, Model model) {
-        User user = userService.getUserById(id);
-        model.addAttribute("user", user);
+        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("user", userService.getUserById(id));
         return "editUser";
     }
 
     @PostMapping(value = "/update/{id}")
-    public String updateUser(@ModelAttribute("user") User user) {
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam ArrayList<Long> listRoleId) {
+        Set<Role> userRole = new HashSet<>();
+        for (Long roleId : listRoleId) {
+            Role role = roleService.getRoleById(roleId);
+            userRole.add(role);
+        }
+        user.setRoles(userRole);
         userService.updateUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping(value = "/new")
-    public String newUser(@ModelAttribute("user") User user) {
+    public String newUser(@ModelAttribute("user") User user, Model model) {
+        model.addAttribute("roles", roleService.getAllRoles());
         return "newUser";
     }
 
     @PostMapping(value = "/create")
-    public String createUser(@ModelAttribute("user") User user, @RequestParam ArrayList<String> listRoleId) {
+    public String createUser(@ModelAttribute("user") User user, @RequestParam ArrayList<Long> listRoleId) {
         Set<Role> userRole = new HashSet<>();
-        for (String roleId : listRoleId) {
-            Role role = roleService.getRoleById(Long.parseLong(roleId));
+        for (Long roleId : listRoleId) {
+            Role role = roleService.getRoleById(roleId);
             userRole.add(role);
         }
         user.setRoles(userRole);

@@ -21,9 +21,8 @@
     <label for="age">Enter age :</label>
     <input type="text" th:field="*{age}" id="age"/>
     <br/>
-    <select multiple size="2" name="roleSet" required class="form-control form-control-sm">
-        <option value="1">ROLE_ADMIN</option>
-        <option selected="selected" value="2">ROLE_USER</option>
+    <select multiple size="2" name="listRoleId">
+        <option th:each="role : ${roles}" th:value="${role.getId()}" th:text="${role.getName()}"/>
     </select>
     <br/>
     <input type="submit" value="Update!"/>
