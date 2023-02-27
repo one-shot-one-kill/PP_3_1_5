@@ -18,14 +18,13 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String home(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("user", user);
-        model.addAttribute("roles", user.getRoles());
+        model.addAttribute("user", userService.getCurrentUser());
         return "home";
     }
 }

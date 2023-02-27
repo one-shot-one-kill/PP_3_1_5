@@ -15,26 +15,34 @@ public class User implements UserDetails {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "username", unique = true)
-    private String username;
+    @Column(name = "first_name", unique = true)
+    private String firstName;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "last_name", unique = true)
+    private String lastName;
 
     @Column(name = "age")
     private int age;
 
+    @Column(name = "email", unique = true)
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "User_Role", joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id"))
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public User() { }
 
-    public User(String username, String password, int age) {
-        this.username = username;
-        this.password = password;
+    public User(String firstName, String lastName, int age, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.age = age;
+        this.email = email;
+        this.password = password;
     }
 
     public long getId() {
@@ -45,20 +53,20 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public int getAge() {
@@ -69,6 +77,18 @@ public class User implements UserDetails {
         this.age = age;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -77,13 +97,29 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public String getStringRoles() {
+        StringBuilder roleString = new StringBuilder();
+        for (Role r: roles) {
+            String temp;
+            if (r.getName().equals("ROLE_ADMIN")) {
+                temp = "ADMIN";
+            } else {
+                temp = "USER";
+            }
+            roleString.append(temp).append(" ");
+        }
+        return roleString.toString();
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", age=" + age +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';
     }
@@ -91,6 +127,16 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override
