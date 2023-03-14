@@ -4,6 +4,17 @@ let form = document.forms["create"];
 createNewUser()
 
 function createNewUser() {
+    fetch("http://localhost:8080/admin/roles")
+        .then(r => r.json())
+        .then(roles => {
+            roles.forEach(role => {
+                let element = document.createElement("option");
+                element.text = role.role.substring(5);
+                element.value = role.id;
+                $('#rolesId')[0].appendChild(element);
+            })
+        })
+
     form.addEventListener("submit", ev => {
         ev.preventDefault();
         let roles= [];

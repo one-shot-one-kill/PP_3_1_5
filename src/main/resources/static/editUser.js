@@ -7,6 +7,17 @@ async function editModal(id) {
 }
 
 function editUser() {
+    fetch("http://localhost:8080/admin/roles")
+        .then(r => r.json())
+        .then(roles => {
+            roles.forEach(role => {
+                let element = document.createElement("option");
+                element.text = role.role.substring(5);
+                element.value = role.id;
+                $('#Edit_rolesId')[0].appendChild(element);
+            })
+        })
+
     formEdit.addEventListener("submit", ev => {
         ev.preventDefault();
         let roles = [];

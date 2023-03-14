@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table
 public class Role implements GrantedAuthority {
 
     @Id
